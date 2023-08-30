@@ -13,18 +13,20 @@ import com.example.cryptoapp.data.workers.RefreshDataWorker
 import com.example.cryptoapp.domain.CoinInfo
 import com.example.cryptoapp.domain.CoinRepository
 import kotlinx.coroutines.delay
+import javax.inject.Inject
 
-class CoinRepositoryImpl(
-    private val application: Application
+class CoinRepositoryImpl @Inject constructor(
+    private val application: Application,
+
+    private val mapper: CoinMapper
 ) : CoinRepository {
 
     private val coinInfoDao = AppDatabase.getInstance(application).coinPriceInfoDao()
-    private val coinMapper = CoinMapper()
 
     override fun getCoinInfoList(): LiveData<List<CoinInfo>> {
         return MediatorLiveData<List<CoinInfo>>().apply {
             addSource(coinInfoDao.getPriceList()) {
-                value = coinMapper.mapDbModelListToEntityList(it)
+                value = mapper.mapDbModelListToEntityList(it)
             }
         }
 
@@ -33,7 +35,7 @@ class CoinRepositoryImpl(
     override fun getCoinInfo(fromSymbol: String): LiveData<CoinInfo> {
         return MediatorLiveData<CoinInfo>().apply {
             addSource(coinInfoDao.getPriceInfoAboutCoin(fromSymbol)) {
-                value = coinMapper.mapDbModelToEntity(it)
+                value = mapper.mapDbModelToEntity(it)
             }
         }
 
