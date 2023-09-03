@@ -1,18 +1,19 @@
 package com.example.cryptoapp.di
 
-import android.app.Activity
 import android.app.Application
-import com.example.cryptoapp.presentation.CoinDetailActivity
+import com.example.cryptoapp.presentation.CoinApplication
 import com.example.cryptoapp.presentation.CoinDetailFragment
 import com.example.cryptoapp.presentation.CoinPriceListActivity
 import dagger.BindsInstance
 import dagger.Component
 
+@ApplicationScope
 @Component(modules = [DataModule::class, ViewModelModule::class])
 interface ApplicationComponent {
 
     fun inject(activity: CoinPriceListActivity)
     fun inject(fragment: CoinDetailFragment)
+    fun inject(application: CoinApplication)
 
     @Component.Factory
     interface Factory {
